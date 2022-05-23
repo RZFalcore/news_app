@@ -1,24 +1,11 @@
-const fs = require("fs");
-const zlib = require("zlib");
+const http = require("http");
 
-const readStream = fs.createReadStream("./docs/text.txt");
-const writeStream = fs.createWriteStream("./docs/new-text.txt");
-const compressedStream = zlib.createGzip();
+const PORT = 3000;
 
-// readStream.on("data", (chunk) => {
-//   writeStream.write("\n ---CHUNK START--- \n");
-//   writeStream.write(chunk);
-//   writeStream.write("\n ---CHUNK END--- \n");
-// });
+const server = http.createServer((req, res) => {
+  console.log(req.url, req.method);
+});
 
-const errorHandler = () => {
-  console.log("Error");
-  readStream.destroy();
-  writeStream.end("Error occured...");
-};
-
-readStream
-  .on("error", errorHandler)
-  .pipe(compressedStream)
-  .pipe(writeStream)
-  .on("error", errorHandler);
+server.listen(PORT, "localhost", (err) => {
+  err ? console.log(err) : console.log(`Server running on port ${PORT}`);
+});
